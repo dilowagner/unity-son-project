@@ -304,6 +304,18 @@ MonoBehaviour:
   velocidadeCorrendo: 10
   pulo: 8
   gravidade: 20
+--- !u!114 &729463884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 729463882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a170858c6dbd34d3db43518bd78f538f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eixos: 0
 --- !u!1 &1191696888
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,3 +381,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &1509105014 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1983273696375648, guid: 0550e1d1e561d4b278ab53da232d64a2,
+    type: 2}
+  m_PrefabInternal: {fileID: 729463881}
+--- !u!114 &1509105015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1509105014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a170858c6dbd34d3db43518bd78f538f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eixos: 1
