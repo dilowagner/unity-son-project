@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 651673646}
   - component: {fileID: 651673645}
   - component: {fileID: 651673644}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Chao
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -304,6 +304,9 @@ MonoBehaviour:
   velocidadeCorrendo: 10
   pulo: 8
   gravidade: 20
+  camadaDoChao:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &729463884
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -386,7 +389,7 @@ GameObject:
   m_PrefabParentObject: {fileID: 1983273696375648, guid: 0550e1d1e561d4b278ab53da232d64a2,
     type: 2}
   m_PrefabInternal: {fileID: 729463881}
---- !u!114 &1509105015
+--- !u!114 &1509105019
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}

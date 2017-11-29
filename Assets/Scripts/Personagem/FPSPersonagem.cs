@@ -27,9 +27,18 @@ public class FPSPersonagem : MonoBehaviour {
 	// Vars de logica
 	private bool noChao, seMovendo;
 
-	// Controle
+	// Vars de Controle
 	private CharacterController charController;
 	private Vector3 direcaoMovimento = Vector3.zero;
+
+	// Pulo, Corrida e Agachamento
+	public LayerMask camadaDoChao;
+	private float rayDistance;
+	private float alturaPadrao;
+	private Vector3 camPosPadrao;
+	private float camAltura;
+	private bool estaAgachado;
+	private float velocidadeAgachado = 3.15f;
 
 	// Use this for initialization
 	void Start () {
@@ -38,7 +47,10 @@ public class FPSPersonagem : MonoBehaviour {
 		charController = GetComponent<CharacterController> ();
 		velocidade = velocidadeAndando;
 		seMovendo = false;
-		
+
+		rayDistance = charController.height * 0.5f + charController.radius;
+		alturaPadrao = charController.height;
+		camPosPadrao = fpsView.localPosition;
 	}
 	
 	// Update is called once per frame
@@ -77,11 +89,14 @@ public class FPSPersonagem : MonoBehaviour {
 		fpsRotation = Vector3.Lerp (fpsRotation, Vector3.zero, Time.deltaTime * 5f);
 		fpsView.localEulerAngles = fpsRotation;
 
-		direcaoMovimento = new Vector3 (inputX * fator, -antiToque, inputY * fator);
-		direcaoMovimento = transform.TransformDirection (direcaoMovimento) * velocidade;
-
-		charController.Move (direcaoMovimento * Time.deltaTime);
+		if (noChao) {
+			direcaoMovimento = new Vector3 (inputX * fator, -antiToque, inputY * fator);
+			direcaoMovimento = transform.TransformDirection (direcaoMovimento) * velocidade;
+		}
 
 		direcaoMovimento.y -= gravidade * Time.deltaTime;
+
+		noChao = (charController.Move (direcaoMovimento * Time.deltaTime) & CollisionFlags.Below) != 0;
+		seMovendo = charController.velocity.magnitude > 0.15f;
 	}
 }
