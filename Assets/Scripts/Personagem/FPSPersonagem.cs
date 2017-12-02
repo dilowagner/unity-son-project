@@ -12,7 +12,7 @@ public class FPSPersonagem : MonoBehaviour {
 	//Vars de Velocidade
 	public float velocidadeAndando = 6.7f;
 	public float velocidadeCorrendo = 10.0f;
-	public float pulo = 8f;
+	public float alturaPulo = 8f;
 	public float gravidade = 20f;
 
 	private float velocidade;
@@ -93,6 +93,7 @@ public class FPSPersonagem : MonoBehaviour {
 			AgachaECorre ();
 			direcaoMovimento = new Vector3 (inputX * fator, -antiToque, inputY * fator);
 			direcaoMovimento = transform.TransformDirection (direcaoMovimento) * velocidade;
+			Pulo ();
 		}
 
 		direcaoMovimento.y -= gravidade * Time.deltaTime;
@@ -118,7 +119,7 @@ public class FPSPersonagem : MonoBehaviour {
 		if (estaAgachado) {
 			velocidade = velocidadeAgachado;
 		} else {
-			if (Input.GetKeyDown (KeyCode.LeftShift)) {
+			if (Input.GetKey (KeyCode.LeftShift)) {
 				velocidade = velocidadeCorrendo;
 			} else {
 				velocidade = velocidadeAndando;
@@ -155,5 +156,19 @@ public class FPSPersonagem : MonoBehaviour {
 		}
 
 		yield return null;
+	}
+
+	void Pulo() {
+		if (Input.GetKeyDown (KeyCode.Space)) {
+			if (estaAgachado) {
+				if (PodeSeLevantar ()) {
+					estaAgachado = false;
+					StopCoroutine (MoveCamera());
+					StartCoroutine (MoveCamera());
+				}
+			} else {
+				direcaoMovimento.y = alturaPulo;
+			}
+		}
 	}
 }
