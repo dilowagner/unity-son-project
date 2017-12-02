@@ -90,6 +90,7 @@ public class FPSPersonagem : MonoBehaviour {
 		fpsView.localEulerAngles = fpsRotation;
 
 		if (noChao) {
+			AgachaECorre ();
 			direcaoMovimento = new Vector3 (inputX * fator, -antiToque, inputY * fator);
 			direcaoMovimento = transform.TransformDirection (direcaoMovimento) * velocidade;
 		}
@@ -111,6 +112,9 @@ public class FPSPersonagem : MonoBehaviour {
 			}
 		}
 
+		StopCoroutine (MoveCamera());
+		StartCoroutine (MoveCamera());
+
 		if (estaAgachado) {
 			velocidade = velocidadeAgachado;
 		} else {
@@ -123,6 +127,33 @@ public class FPSPersonagem : MonoBehaviour {
 	}
 
 	bool PodeSeLevantar() {
+		Ray rayTopo = new Ray (transform.position, transform.up);
+		RaycastHit rayTopoHit;
+
+		if (Physics.SphereCast (rayTopo, charController.radius + 0.05f, out rayTopoHit, rayDistance, camadaDoChao)) {
+			if (Vector3.Distance (transform.position, rayTopoHit.point) < 2.79f) {
+				return false;
+			}
+		}
+
 		return true;
+	}
+
+	IEnumerator MoveCamera() {
+		charController.height = estaAgachado ? alturaPadrao / 1.5f : alturaPadrao;
+		charController.center = new Vector3 (0, charController.height / 2f, 0);
+		camAltura = estaAgachado ? camPosPadrao.y / 1.5f : camPosPadrao.y;
+
+		while(Mathf.Abs(camAltura - fpsView.localPosition.y) > 0.01f) {
+			fpsView.localPosition = Vector3.Lerp (
+				fpsView.localPosition, 
+				new Vector3 (
+					camPosPadrao.x, 
+					camAltura, 
+					camPosPadrao.z
+				), Time.deltaTime * 11f);
+		}
+
+		yield return null;
 	}
 }
