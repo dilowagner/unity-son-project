@@ -99,4 +99,30 @@ public class FPSPersonagem : MonoBehaviour {
 		noChao = (charController.Move (direcaoMovimento * Time.deltaTime) & CollisionFlags.Below) != 0;
 		seMovendo = charController.velocity.magnitude > 0.15f;
 	}
+
+	void AgachaECorre() {
+		if (Input.GetKeyDown (KeyCode.C)) {
+			if (!estaAgachado) {
+				estaAgachado = true;
+			} else {
+				if (PodeSeLevantar ()) {
+					estaAgachado = false;
+				}
+			}
+		}
+
+		if (estaAgachado) {
+			velocidade = velocidadeAgachado;
+		} else {
+			if (Input.GetKeyDown (KeyCode.LeftShift)) {
+				velocidade = velocidadeCorrendo;
+			} else {
+				velocidade = velocidadeAndando;
+			}
+		}
+	}
+
+	bool PodeSeLevantar() {
+		return true;
+	}
 }
