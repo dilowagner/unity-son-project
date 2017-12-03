@@ -40,6 +40,10 @@ public class FPSPersonagem : MonoBehaviour {
 	private bool estaAgachado;
 	private float velocidadeAgachado = 3.15f;
 
+
+	// Vars Animacoes
+	private Animator animator;
+
 	// Use this for initialization
 	void Start () {
 
@@ -47,6 +51,8 @@ public class FPSPersonagem : MonoBehaviour {
 		charController = GetComponent<CharacterController> ();
 		velocidade = velocidadeAndando;
 		seMovendo = false;
+
+		animator = transform.Find("Modelo").gameObject.GetComponent<Animator>();
 
 		rayDistance = charController.height * 0.5f + charController.radius;
 		alturaPadrao = charController.height;
@@ -100,6 +106,8 @@ public class FPSPersonagem : MonoBehaviour {
 
 		noChao = (charController.Move (direcaoMovimento * Time.deltaTime) & CollisionFlags.Below) != 0;
 		seMovendo = charController.velocity.magnitude > 0.15f;
+
+		AnimacoesAndando ();
 	}
 
 	void AgachaECorre() {
@@ -170,5 +178,10 @@ public class FPSPersonagem : MonoBehaviour {
 				direcaoMovimento.y = alturaPulo;
 			}
 		}
+	}
+
+	void AnimacoesAndando() {
+		
+		animator.SetFloat ("VelocidadeX", charController.velocity.magnitude);
 	}
 }
