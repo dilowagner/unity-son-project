@@ -143,7 +143,7 @@ GameObject:
   m_Layer: 0
   m_Name: FPS Visao
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -277,6 +277,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4095404431192268}
   - component: {fileID: 143901152958125556}
+  - component: {fileID: 114851354096358348}
+  - component: {fileID: 114683376035392360}
   m_Layer: 0
   m_Name: FPS Personagem
   m_TagString: Untagged
@@ -535,6 +537,7 @@ GameObject:
   - component: {fileID: 20120012829522962}
   - component: {fileID: 124582196140978626}
   - component: {fileID: 81423784383955000}
+  - component: {fileID: 114237014023924088}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -563,7 +566,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1983273696375648}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.3, y: 2.3, z: 0.4}
+  m_LocalPosition: {x: 0.02, y: 0.07, z: -0.04}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4841257582932488}
@@ -968,7 +971,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1025410218321398}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.3106146, y: 0.017, z: 0.41879988}
+  m_LocalPosition: {x: 0, y: -0.08, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4555406404518182}
@@ -997,7 +1000,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1166847294367672}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.316, y: 2.304, z: 0.456}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4085897608782158}
@@ -1091,6 +1094,48 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114237014023924088
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1983273696375648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a170858c6dbd34d3db43518bd78f538f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eixos: 1
+--- !u!114 &114683376035392360
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1437571320698212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a170858c6dbd34d3db43518bd78f538f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eixos: 0
+--- !u!114 &114851354096358348
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1437571320698212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e247ac78a10744a98b6e930bb2d7bb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocidadeAndando: 6.7
+  velocidadeCorrendo: 10
+  alturaPulo: 8
+  gravidade: 20
+  camadaDoChao:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!124 &124582196140978626
 Behaviour:
   m_ObjectHideFlags: 1
@@ -1176,9 +1221,9 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 2
   m_Height: 2.8
-  m_Radius: 0.3
+  m_Radius: 0.35
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: -0.3, y: 1.2, z: 0.4}
+  m_Center: {x: -0.3, y: 1.3, z: 0.4}
