@@ -108,6 +108,7 @@ public class FPSPersonagem : MonoBehaviour {
 		seMovendo = charController.velocity.magnitude > 0.15f;
 
 		AnimacoesAndando ();
+		AnimacoesPulando ();
 	}
 
 	void AgachaECorre() {
@@ -183,5 +184,10 @@ public class FPSPersonagem : MonoBehaviour {
 	void AnimacoesAndando() {
 		
 		animator.SetFloat ("VelocidadeX", charController.velocity.magnitude);
+	}
+
+	void AnimacoesPulando() {
+
+		animator.SetFloat ("Altura", charController.velocity.y);
 	}
 }
