@@ -134,6 +134,8 @@ public class FPSPersonagem : MonoBehaviour {
 				velocidade = velocidadeAndando;
 			}
 		}
+
+		AnimacoesAgachado ();
 	}
 
 	bool PodeSeLevantar() {
@@ -179,6 +181,8 @@ public class FPSPersonagem : MonoBehaviour {
 				direcaoMovimento.y = alturaPulo;
 			}
 		}
+
+		AnimacoesAgachado ();
 	}
 
 	void AnimacoesAndando() {
@@ -189,5 +193,10 @@ public class FPSPersonagem : MonoBehaviour {
 	void AnimacoesPulando() {
 
 		animator.SetFloat ("Altura", charController.velocity.y);
+	}
+
+	void AnimacoesAgachado() {
+
+		animator.SetBool ("Agachado", estaAgachado);
 	}
 }
