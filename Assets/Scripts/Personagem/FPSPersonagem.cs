@@ -43,6 +43,7 @@ public class FPSPersonagem : MonoBehaviour {
 
 	// Vars Animacoes
 	private Animator animator;
+	private GameObject arma;
 
 	// Use this for initialization
 	void Start () {
@@ -53,6 +54,7 @@ public class FPSPersonagem : MonoBehaviour {
 		seMovendo = false;
 
 		animator = transform.Find("Modelo").gameObject.GetComponent<Animator>();
+		arma = transform.Find ("FPS Visao").transform.Find ("Main Camera").transform.Find ("Arma").gameObject;
 
 		rayDistance = charController.height * 0.5f + charController.radius;
 		alturaPadrao = charController.height;
@@ -62,6 +64,7 @@ public class FPSPersonagem : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		Movimento ();
+		AnimacoesFPS ();
 	}
 
 	void Movimento() {
@@ -198,5 +201,14 @@ public class FPSPersonagem : MonoBehaviour {
 	void AnimacoesAgachado() {
 
 		animator.SetBool ("Agachado", estaAgachado);
+	}
+
+	void AnimacoesFPS()
+	{
+		if (seMovendo) {
+			arma.GetComponent<Animator> ().SetBool ("Andando", true);
+		} else {
+			arma.GetComponent<Animator> ().SetBool ("Andando", false);
+		}
 	}
 }
