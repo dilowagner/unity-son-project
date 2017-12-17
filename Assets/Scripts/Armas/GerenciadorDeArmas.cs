@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class GerenciadorDeArmas : MonoBehaviour {
 
@@ -14,6 +13,7 @@ public class GerenciadorDeArmas : MonoBehaviour {
 	public Transform pontoRayCaster;
 	public ParticleSystem efeitoDeFogo;
     private bool estaRecarregando;
+    public Text textoMunicao;
 
 	private Animator anim;
     private AudioSource fonteDeSom;
@@ -25,6 +25,8 @@ public class GerenciadorDeArmas : MonoBehaviour {
 		balasRestantes = balasPorPente;
 		anim = GetComponent<Animator> ();
         fonteDeSom = GetComponent<AudioSource>();
+
+        textoMunicao.text = balasRestantes + "/" + balasReservas;
 	}
 	
 	// Update is called once per frame
@@ -79,6 +81,8 @@ public class GerenciadorDeArmas : MonoBehaviour {
         balasRestantes--;
 
 		contador = 0.0f;
+
+        AtualizarTextoMunicao();
 	}
 
     void Recarregar() 
@@ -100,6 +104,8 @@ public class GerenciadorDeArmas : MonoBehaviour {
 
         balasReservas -= QtdReduzir;
         balasRestantes += QtdReduzir;
+
+        AtualizarTextoMunicao();
     }
 
     void RecargaAnimacao()
@@ -119,5 +125,10 @@ public class GerenciadorDeArmas : MonoBehaviour {
     {
         fonteDeSom.clip = somDeDisparo;
         fonteDeSom.Play();
+    }
+
+    void AtualizarTextoMunicao()
+    {
+        textoMunicao.text = balasRestantes + "/" + balasReservas;
     }
 }
