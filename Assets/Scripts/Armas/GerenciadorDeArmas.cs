@@ -12,7 +12,7 @@ public class GerenciadorDeArmas : MonoBehaviour {
 	public float contador;
 	public Transform pontoRayCaster;
 	public ParticleSystem efeitoDeFogo;
-    private bool estaRecarregando;
+    public bool estaRecarregando;
     public Text textoMunicao;
 
 	private Animator anim;
@@ -20,18 +20,45 @@ public class GerenciadorDeArmas : MonoBehaviour {
     public AudioClip somDeDisparo;
     public AudioClip somDeRecarga;
 
+
+    private float[] distanciaArmas = { 100f, 120f, 40f, 300f };
+    private int[] balasPorPenteArmas = { 30, 35, 12, 10 };
+    private int[] balasReservasArmas = { 100, 120, 40, 25 };
+    private float[] taxaDeDisparoArmas = { 0.1f, 0.1f, 0.98f, 1.8f };
+    private int[] balasRestantesArmas = { 30, 35, 12, 10 };
+    public AudioClip[] somDeDisparoArmas = {};
+
+    public TrocaDeArmas trocaDeArmas;
+    private int armaSelecionada;
+    public GameObject efeitoImpacto;
+    public GameObject rayCastCamera;
+
+    public GameObject scope;
+    public GameObject scopeCam;
+    public bool estaScope;
+
+    public GameObject mira;
+
 	// Use this for initialization
 	void Start () {
-		balasRestantes = balasPorPente;
+
+        scope.SetActive(false);
+        estaScope = false;
+        armaSelecionada = trocaDeArmas.armaSelecionada;
+
+        balasRestantesArmas[armaSelecionada] = balasPorPenteArmas[armaSelecionada];
 		anim = GetComponent<Animator> ();
         fonteDeSom = GetComponent<AudioSource>();
 
-        textoMunicao.text = balasRestantes + "/" + balasReservas;
+        textoMunicao.text = balasRestantesArmas[armaSelecionada] + "/" + balasReservasArmas[armaSelecionada];
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        Scope();
+        armaSelecionada = trocaDeArmas.armaSelecionada;
 		Disparo ();
+        AtualizarTextoMunicao();
 	}
 
 	private void FixedUpdate() {
@@ -46,7 +73,7 @@ public class GerenciadorDeArmas : MonoBehaviour {
 	void Disparo()
 	{
         if (Input.GetButton ("Fire1")) {
-            if(balasRestantes > 0) {
+            if(balasRestantesArmas[armaSelecionada] > 0) {
                 Tiro();    
             } else {
                 Recarregar();
@@ -57,20 +84,20 @@ public class GerenciadorDeArmas : MonoBehaviour {
             Recarregar();
         }
 
-		if (contador < taxaDeDisparo) {
+        if (contador < taxaDeDisparoArmas[armaSelecionada]) {
 			contador += Time.deltaTime;
 		}
 	}
 
 	void Tiro()
 	{
-        if (contador < taxaDeDisparo || balasRestantes <= 0 || estaRecarregando) {
+        if (contador < taxaDeDisparoArmas[armaSelecionada] || balasRestantesArmas[armaSelecionada] <= 0 || estaRecarregando) {
 			return;
 		}
 
 		RaycastHit bala;
 
-		if (Physics.Raycast (pontoRayCaster.position, pontoRayCaster.transform.forward, out bala, distancia)) {
+        if (Physics.Raycast (rayCastCamera.transform.position, rayCastCamera.transform.forward, out bala, distanciaArmas[armaSelecionada])) {
 			Debug.Log ("Tocou em: " + bala.transform.name);
 		}
 
@@ -78,7 +105,8 @@ public class GerenciadorDeArmas : MonoBehaviour {
         EfeitoSonoro();
 		anim.CrossFadeInFixedTime ("Atirando", 0.1f);
 
-        balasRestantes--;
+        GameObject efeitoImpactoClone = Instantiate(efeitoImpacto, bala.point, Quaternion.FromToRotation(Vector3.forward, bala.normal));
+        balasRestantesArmas[armaSelecionada]--;
 
 		contador = 0.0f;
 
@@ -87,23 +115,23 @@ public class GerenciadorDeArmas : MonoBehaviour {
 
     void Recarregar() 
     {
-        if(balasReservas <= 0) {
+        if(balasReservasArmas[armaSelecionada] <= 0) {
             return;
         }
 
-        int QtdBalas = balasPorPente - balasRestantes;
+        int QtdBalas = balasPorPenteArmas[armaSelecionada] - balasRestantesArmas[armaSelecionada];
         int QtdReduzir;
 
-        if (balasReservas >= QtdBalas) {
+        if (balasReservasArmas[armaSelecionada] >= QtdBalas) {
             QtdReduzir = QtdBalas;    
         } else {
-            QtdReduzir = balasReservas;    
+            QtdReduzir = balasReservasArmas[armaSelecionada];    
         }
 
         RecargaAnimacao();
 
-        balasReservas -= QtdReduzir;
-        balasRestantes += QtdReduzir;
+        balasReservasArmas[armaSelecionada] -= QtdReduzir;
+        balasRestantesArmas[armaSelecionada] += QtdReduzir;
 
         AtualizarTextoMunicao();
     }
@@ -123,12 +151,46 @@ public class GerenciadorDeArmas : MonoBehaviour {
 
     void EfeitoSonoro()
     {
-        fonteDeSom.clip = somDeDisparo;
+        fonteDeSom.clip = somDeDisparoArmas[armaSelecionada];
         fonteDeSom.Play();
     }
 
     void AtualizarTextoMunicao()
     {
-        textoMunicao.text = balasRestantes + "/" + balasReservas;
+        textoMunicao.text = balasRestantesArmas[armaSelecionada] + "/" + balasReservasArmas[armaSelecionada];
+    }
+
+    void Scope() 
+    {
+        if(estaRecarregando) 
+        {
+            scope.SetActive(false);
+            scopeCam.GetComponent<Camera>().fieldOfView = 60f;
+            estaScope = false;
+        }
+
+        if(armaSelecionada != 3 || estaRecarregando) 
+        {
+            mira.SetActive(true);
+            return;
+        }
+
+        mira.SetActive(false);
+
+        if(Input.GetMouseButtonDown(1)) 
+        {
+            if(estaScope) 
+            {
+                scope.SetActive(false);
+                scopeCam.GetComponent<Camera>().fieldOfView = 60f;
+                estaScope = false;
+            }
+            else 
+            {
+                scope.SetActive(true);
+                scopeCam.GetComponent<Camera>().fieldOfView = 10f;
+                estaScope = true;
+            }
+        }
     }
 }
