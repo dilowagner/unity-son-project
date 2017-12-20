@@ -44,6 +44,7 @@ public class FPSPersonagem : MonoBehaviour {
 	// Vars Animacoes
 	private Animator animator;
 	private GameObject arma;
+    private AudioSource audioSrc;
 
 	// Use this for initialization
 	void Start () {
@@ -59,12 +60,15 @@ public class FPSPersonagem : MonoBehaviour {
 		rayDistance = charController.height * 0.5f + charController.radius;
 		alturaPadrao = charController.height;
 		camPosPadrao = fpsView.localPosition;
+
+        audioSrc = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		Movimento ();
 		AnimacoesFPS ();
+        Pegadas();
 	}
 
 	void Movimento() {
@@ -211,4 +215,14 @@ public class FPSPersonagem : MonoBehaviour {
 			arma.GetComponent<Animator> ().SetBool ("Andando", false);
 		}
 	}
+
+    void Pegadas() {
+
+        if (charController.isGrounded == true && seMovendo && audioSrc.isPlaying == false) 
+        {
+            audioSrc.volume = Random.Range(0.04f, 0.1f);
+            audioSrc.pitch = Random.Range(0.8f, 1.1f);
+            audioSrc.Play();
+        }
+    }
 }
