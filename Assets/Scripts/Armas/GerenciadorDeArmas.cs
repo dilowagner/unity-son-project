@@ -26,6 +26,8 @@ public class GerenciadorDeArmas : MonoBehaviour {
     private int[] balasReservasArmas = { 100, 120, 40, 25 };
     private float[] taxaDeDisparoArmas = { 0.1f, 0.1f, 0.98f, 1.8f };
     private int[] balasRestantesArmas = { 30, 35, 12, 10 };
+    public float dano;
+    private float[] danoArmas = { 1.2f, 0.9f, 3f, 8f };
     public AudioClip[] somDeDisparoArmas = {};
 
     public TrocaDeArmas trocaDeArmas;
@@ -38,10 +40,12 @@ public class GerenciadorDeArmas : MonoBehaviour {
     public bool estaScope;
 
     public GameObject mira;
+    public RaycastHit bala;
 
 	// Use this for initialization
 	void Start () {
 
+        dano = danoArmas[trocaDeArmas.armaSelecionada];
         scope.SetActive(false);
         estaScope = false;
         armaSelecionada = trocaDeArmas.armaSelecionada;
@@ -56,6 +60,7 @@ public class GerenciadorDeArmas : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         Scope();
+        dano = danoArmas[trocaDeArmas.armaSelecionada];
         armaSelecionada = trocaDeArmas.armaSelecionada;
 		Disparo ();
         AtualizarTextoMunicao();
@@ -95,7 +100,7 @@ public class GerenciadorDeArmas : MonoBehaviour {
 			return;
 		}
 
-		RaycastHit bala;
+		
 
         if (Physics.Raycast (rayCastCamera.transform.position, rayCastCamera.transform.forward, out bala, distanciaArmas[armaSelecionada])) {
 			Debug.Log ("Tocou em: " + bala.transform.name);

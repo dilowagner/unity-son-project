@@ -1,8 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class FPSPersonagem : MonoBehaviour {
+public class FPSPersonagem : NetworkBehaviour {
 
 	// Vars de Transform
 	private Transform fpsView;
@@ -46,6 +46,15 @@ public class FPSPersonagem : MonoBehaviour {
 	private GameObject arma;
     private AudioSource audioSrc;
 
+    // Multiplayer
+    public GameObject personagem, braco;
+    public GameObject mao;
+    public GameObject[] armasView;
+    private Camera mainCam;
+    public FPSCamera[] fpsCameras;
+
+    public GerenciadorDeArmas ga;
+
 	// Use this for initialization
 	void Start () {
 
@@ -56,16 +65,102 @@ public class FPSPersonagem : MonoBehaviour {
 
 		animator = transform.Find("Modelo").gameObject.GetComponent<Animator>();
 		arma = transform.Find ("FPS Visao").transform.Find ("Main Camera").transform.Find ("Arma").gameObject;
+        audioSrc = GetComponent<AudioSource>();
 
 		rayDistance = charController.height * 0.5f + charController.radius;
 		alturaPadrao = charController.height;
 		camPosPadrao = fpsView.localPosition;
 
-        audioSrc = GetComponent<AudioSource>();
+        // Eu
+        if(isLocalPlayer)
+        {
+            personagem.layer = LayerMask.NameToLayer("Jogador");
+            foreach(Transform filho in personagem.transform) {
+                filho.gameObject.layer = LayerMask.NameToLayer("Jogador");
+            }
+
+            braco.layer = LayerMask.NameToLayer("Inimigo");
+            foreach (Transform filho in braco.transform)
+            {
+                filho.gameObject.layer = LayerMask.NameToLayer("Inimigo");
+            }
+
+            mao.layer = LayerMask.NameToLayer("Inimigo");
+            foreach (Transform filho in mao.transform)
+            {
+                filho.gameObject.layer = LayerMask.NameToLayer("Inimigo");
+            }
+
+            for (int i = 0; i < armasView.Length; i++) 
+            {
+                armasView[i].layer = LayerMask.NameToLayer("Jogador");
+            }
+        }
+
+        // Outro jogador
+        if (!isLocalPlayer)
+        {
+            personagem.layer = LayerMask.NameToLayer("Inimigo");
+            foreach (Transform filho in personagem.transform)
+            {
+                filho.gameObject.layer = LayerMask.NameToLayer("Inimigo");
+            }
+
+            braco.layer = LayerMask.NameToLayer("Jogador");
+            foreach (Transform filho in braco.transform)
+            {
+                filho.gameObject.layer = LayerMask.NameToLayer("Jogador");
+            }
+
+            mao.layer = LayerMask.NameToLayer("Jogador");
+            foreach (Transform filho in mao.transform)
+            {
+                filho.gameObject.layer = LayerMask.NameToLayer("Jogador");
+            }
+
+            for (int i = 0; i < armasView.Length; i++)
+            {
+                armasView[i].layer = LayerMask.NameToLayer("Inimigo");
+            }
+        }
+
+        if (!isLocalPlayer)
+        {
+            for (int i = 0; i < fpsCameras.Length; i++) 
+            {
+                fpsCameras[i].enabled = false;
+            }
+        }
+
+        mainCam = transform.Find("FPS Visao").Find("Main Camera").GetComponent<Camera>();
+        mainCam.gameObject.SetActive(false);
 	}
+
+    public override void OnStartLocalPlayer()
+    {
+        tag = "Player";
+    }
 	
 	// Update is called once per frame
 	void Update () {
+
+        if (isLocalPlayer)
+        {
+            if(!mainCam.gameObject.activeInHierarchy) {
+                mainCam.gameObject.SetActive(true);
+            }
+        }
+
+        if(!isLocalPlayer)
+        {
+            return;
+        }
+
+        if(Input.GetButton("Fire1"))
+        {
+            Dano();
+        }
+
 		Movimento ();
 		AnimacoesFPS ();
         Pegadas();
@@ -223,6 +318,20 @@ public class FPSPersonagem : MonoBehaviour {
             audioSrc.volume = Random.Range(0.04f, 0.1f);
             audioSrc.pitch = Random.Range(0.8f, 1.1f);
             audioSrc.Play();
+        }
+    }
+
+    [Command]
+    void CmdDano(GameObject inimigo)
+    {
+        inimigo.GetComponent<VidaJogador>().TomarDano(ga.dano);
+    }
+
+    void Dano()
+    {
+        if(ga.bala.transform.tag == "inimigo") 
+        {
+            CmdDano(ga.bala.transform.gameObject);
         }
     }
 }
